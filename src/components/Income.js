@@ -1,16 +1,55 @@
+import { useContext, useState } from "react";
 import styled from "styled-components";
-
+import { TokenContext } from "./TokenContext";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Income(){
 
+    const [descriptionValue, setDescriptionValue] = useState("");
+    const [value, setValue] = useState("");
+    const { token } = useContext(TokenContext);
+
+    const navigate = useNavigate();
+
+    function tryInsert(e){
+        e.preventDefault();
+
+        const body = {
+            value,
+            description:descriptionValue,
+            type:"income"
+        }
+
+        const config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          };
+
+        const URL = "http://localhost:5000/balance";
+
+        const promise = axios.post(URL, body, config)
+        promise.then((res) => {
+            console.log(res.data)
+           
+            navigate("/");
+        })
+        promise.catch((err) => {
+            console.log(err.response.data)
+            alert("Ocorreu um erro, tente novamente!");
+        })
+    }
     return(
         <Container>
             <HeaderContainer>
                 Nova entrada
             </HeaderContainer>
-            <Field placeholder="Valor"/>
-            <Field placeholder="Descrição"/>
-            <StyledButton>Salvar entrada</StyledButton>
+            <form onSubmit={tryInsert}>
+            <Field placeholder="Valor" type="number" id="valueField" value={value} onChange={(e) => setValue(e.target.value)} required/>
+            <Field placeholder="Descrição" type="text" id="descriptionField" value={descriptionValue} onChange={(e) => setDescriptionValue(e.target.value)} required/>
+            <StyledButton type="submit">Salvar entrada</StyledButton>
+            </form>
         </Container>
     )
 }

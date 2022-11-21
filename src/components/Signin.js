@@ -2,14 +2,17 @@ import styled from "styled-components";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { TokenContext } from "./TokenContext";
 
 export default function Signin(){
 
     const [emailValue, setEmailValue] = useState("");
     const [passwordValue, setPasswordValue] = useState("");
+    const { setToken } = useContext(TokenContext);
 
     const navigate = useNavigate();
-    
+
     function trySignIn(e){
         e.preventDefault();
 
@@ -22,6 +25,8 @@ export default function Signin(){
 
         const promise = axios.post(URL, body)
         promise.then((res) => {
+            console.log(res.data)
+            setToken(res.data.token)
             navigate("/");
         })
         promise.catch((err) => {

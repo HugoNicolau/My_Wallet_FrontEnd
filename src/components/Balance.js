@@ -1,8 +1,38 @@
 import styled from "styled-components";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
+import { useContext, useEffect, useState } from "react";
+import { TokenContext } from "./TokenContext";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Balance() {
+
+  const [items, setItems] = useState([]);
+  const { token } = useContext(TokenContext);
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+
+    const URL = "http://localhost:5000/balance"
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    const promise = axios.get(URL, config);
+    promise.then((res) => {
+      console.log(res.data);
+      setItems(res.data)
+    })
+
+    if(token.length === 0){
+      navigate("/sign-in");
+    }
+  },[token])
+
   return (
     <Container>
       <HeaderContainer>
@@ -19,13 +49,19 @@ entrada ou saída
                     </h1>
                 </NoData> */}
         <DataAvailable>
-          <DivItem>
+          {items.map((i) => {
+
+            return(
+
+              <DivItem>
             <DivDateName>
             <h1>30/11</h1>
-            <h2>Almoço</h2>
+            <h2>{i.description}</h2>
             </DivDateName>
-            <h3>30.50</h3>
+            <h3>{Number(i.value).toFixed(2)}</h3>
           </DivItem>
+              )
+          })}
           <BalanceDiv>
             <h1>SALDO</h1>
             <h2>2023.50</h2>
@@ -33,11 +69,11 @@ entrada ou saída
         </DataAvailable>
       </BoxContainer>
       <ButtonContainer>
-        <NewButton>
+        <NewButton onClick={()=>{navigate("/income")}}>
           <AiOutlinePlusCircle />
           <h1>Nova Entrada</h1>
         </NewButton>
-        <NewButton>
+        <NewButton onClick={()=>{navigate("/outcome")}}>
           <AiOutlineMinusCircle />
           <h1>Nova Saída</h1>
         </NewButton>
