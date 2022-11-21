@@ -1,18 +1,54 @@
 import styled from "styled-components";
-
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Signup(){
 
 
+    const [nameValue, setNameValue] = useState("")
+    const [emailValue, setEmailValue] = useState("")
+    const [passwordValue, setPasswordValue] = useState("")
+    const [confirmPasswordValue, setConfirmPasswordValue] = useState("")
+
+    const navigate = useNavigate();
+
+    function trySignUp(e){
+        e.preventDefault();
+        if(passwordValue !== confirmPasswordValue){
+            alert("As senhas não são iguais");
+            return;
+        }
+        const body = {
+            name: nameValue,
+            email: emailValue,
+            password: passwordValue,
+        }
+
+        const URL = "http://localhost:5000/sign-up";
+
+        const promise = axios.post(URL, body)
+        promise.then((res) => {
+            navigate("/");
+        })
+        promise.catch((err) => {
+            console.log(err.response.data)
+            alert("Ocorreu um erro, tente novamente!");
+        })
+
+    }
+
     return(
         <Container>
             <Logo>My Wallet</Logo>
-            <Field placeholder="Nome"/>
-            <Field placeholder="E-mail"/>
-            <Field placeholder="Senha"/>
-            <Field placeholder="Confirme a senha"/>
+            <form onSubmit={trySignUp}>
+            <Field placeholder="Nome" type="text" id="nameField" value={nameValue} onChange={(e) => setNameValue(e.target.value)} required/>
+            <Field placeholder="E-mail" type="email" id="emailField" value={emailValue} onChange={(e) => setEmailValue(e.target.value)} required/>
+            <Field placeholder="Senha" type="password" id="passwordField" value={passwordValue} onChange={(e) => setPasswordValue(e.target.value)} required/>
+            <Field placeholder="Confirme a senha" type="password" id="confirmPasswordField" value={confirmPasswordValue} onChange={(e) => setConfirmPasswordValue(e.target.value)} required/>
 
-            <StyledButton>Cadastrar</StyledButton>
+            <StyledButton type="submit">Cadastrar</StyledButton>
+            </form>
             <StyledText>Já tem uma conta? Entre agora!</StyledText>
         </Container>
     )
