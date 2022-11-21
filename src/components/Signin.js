@@ -1,15 +1,44 @@
 import styled from "styled-components";
-
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Signin(){
 
+    const [emailValue, setEmailValue] = useState("");
+    const [passwordValue, setPasswordValue] = useState("");
+
+    const navigate = useNavigate();
+    
+    function trySignIn(e){
+        e.preventDefault();
+
+        const body = {
+            email: emailValue,
+            password: passwordValue,
+        }
+
+        const URL = "http://localhost:5000/sign-in";
+
+        const promise = axios.post(URL, body)
+        promise.then((res) => {
+            navigate("/");
+        })
+        promise.catch((err) => {
+            console.log(err.response.data)
+            alert("Ocorreu um erro, tente novamente!");
+        })
+
+    }
 
     return(
         <Container>
             <Logo>My Wallet</Logo>
-            <Field placeholder="E-mail"/>
-            <Field placeholder="Senha"/>
-            <StyledButton>Entrar</StyledButton>
+            <form onSubmit={trySignIn}>
+            <Field placeholder="E-mail" type="email" id="emailField" value={emailValue} onChange={(e) => setEmailValue(e.target.value)} required/>
+            <Field placeholder="Senha" type="password" id="passwordField" value={passwordValue} onChange={(e) => setPasswordValue(e.target.value)} required/>
+            <StyledButton type="submit">Entrar</StyledButton>
+            </form>
             <StyledText>Primeira vez? Cadastre-se!</StyledText>
         </Container>
     )
