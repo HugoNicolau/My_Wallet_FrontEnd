@@ -5,15 +5,19 @@ import Signup from "./Signup";
 import Balance from "./Balance";
 import Income from "./Income";
 import Outcome from "./Outcome";
-
+import { TokenContext } from "./TokenContext";
+import { useState } from "react";
 
 export default function App(){
 
-
+const [token, setToken] = useState("");
 
     return(
+        <TokenContext.Provider value={{token, setToken}}>
+
         <BrowserRouter>
         <GlobalStyle/>
+        
         <Routes>
         <Route path="/sign-in" element={<Signin/>}/>
         <Route path="/sign-up" element={<Signup/>}/>
@@ -23,5 +27,7 @@ export default function App(){
         
         </Routes>
         </BrowserRouter>
+
+        </TokenContext.Provider>
     )
 }
