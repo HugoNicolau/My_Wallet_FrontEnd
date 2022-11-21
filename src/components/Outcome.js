@@ -1,20 +1,70 @@
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-
+import { TokenContext } from "./TokenContext";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 export default function Outcome(){
 
+    const [descriptionValue, setDescriptionValue] = useState("");
+    const [value, setValue] = useState("");
+    const { token } = useContext(TokenContext);
+    const date = dayjs().format("DD/MM");
+
+    const navigate = useNavigate();
+
+    function tryInsert(e){
+        e.preventDefault();
+
+        const body = {
+            value,
+            description:descriptionValue,
+            type:"outcome",
+            date
+        }
+
+        const config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          };
+
+        const URL = "http://localhost:5000/balance";
+
+        const promise = axios.post(URL, body, config)
+        promise.then((res) => {
+            console.log(res.data)
+           
+            navigate("/");
+        })
+        promise.catch((err) => {
+            console.log(err.response.data)
+            alert("Ocorreu um erro, tente novamente!");
+        })
+    }
+   
+
+      useEffect(() => {
+        if (token.length === 0) {
+            navigate("/sign-in");
+          }
+      
+      },[token, navigate]) 
+      
     return(
         <Container>
             <HeaderContainer>
                 Nova saída
             </HeaderContainer>
-            <Field placeholder="Valor"/>
-            <Field placeholder="Descrição"/>
-            <StyledButton>Salvar saída</StyledButton>
+            <form onSubmit={tryInsert}>
+            <Field placeholder="Valor" type="number" id="valueField" value={value} onChange={(e) => setValue(e.target.value)} required/>
+            <Field placeholder="Descrição" type="text" id="descriptionField" value={descriptionValue} onChange={(e) => setDescriptionValue(e.target.value)} required/>
+            <StyledButton type="submit">Salvar saída</StyledButton>
+            </form>
         </Container>
     )
 }
-
 
 
 const Container = styled.div`

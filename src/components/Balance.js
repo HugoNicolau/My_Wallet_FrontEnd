@@ -7,73 +7,90 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function Balance() {
-
   const [items, setItems] = useState([]);
   const { token } = useContext(TokenContext);
   const navigate = useNavigate();
-
+  const [user, setUser] = useState("");
+  const [totalValue, setTotalValue] = useState(0)
 
   useEffect(() => {
-
-    const URL = "http://localhost:5000/balance"
+    const URL = "http://localhost:5000/balance";
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
     const promise = axios.get(URL, config);
     promise.then((res) => {
-      console.log(res.data);
-      setItems(res.data)
-    })
+      console.log(res.data[0].name)
+      setItems(res.data);
+      setUser(res.data[0].name)
+      let cont = 0;
+    res.data.forEach((item) => {
+      item.type === "income" ? cont+= Number(item.value) : cont-=Number(item.value)
 
-    if(token.length === 0){
+    })
+    setTotalValue(cont)
+    });
+
+    if (token.length === 0) {
       navigate("/sign-in");
     }
-  },[token])
+
+    
+  }, [token,navigate]);
 
   return (
     <Container>
       <HeaderContainer>
-        <h1>Olá Fulano</h1>
+
+        <h1>Olá {user}</h1>
         <h1>
-          <RiLogoutBoxRLine />
+          <RiLogoutBoxRLine onClick={() => window.location.reload()}/>
         </h1>
       </HeaderContainer>
       <BoxContainer>
-        {/* <NoData>
+        {items.length === 0 ? <NoData>
                     <h1>
                     Não há registros de
 entrada ou saída
                     </h1>
-                </NoData> */}
-        <DataAvailable>
-          {items.map((i) => {
-
-            return(
-
-              <DivItem>
-            <DivDateName>
-            <h1>30/11</h1>
-            <h2>{i.description}</h2>
-            </DivDateName>
-            <h3>{Number(i.value).toFixed(2)}</h3>
-          </DivItem>
-              )
-          })}
-          <BalanceDiv>
-            <h1>SALDO</h1>
-            <h2>2023.50</h2>
-          </BalanceDiv>
-        </DataAvailable>
+                </NoData> :
+               <DataAvailable>
+               {items.map((i, id) => {
+                 return (
+                   <DivItem key={id} type={i.type}>
+                     <DivDateName>
+                       <h1>{i.date}</h1>
+                       <h2>{i.description}</h2>
+                     </DivDateName>
+                     <h3>{Number(i.value).toFixed(2)}</h3>
+                   </DivItem>
+                 );
+               })}
+               <BalanceDiv balance={totalValue}>
+                 <h1>SALDO</h1>
+                 <h2>{totalValue.toFixed(2)}</h2>
+               </BalanceDiv>
+             </DataAvailable> }
+        
+        
       </BoxContainer>
       <ButtonContainer>
-        <NewButton onClick={()=>{navigate("/income")}}>
+        <NewButton
+          onClick={() => {
+            navigate("/income");
+          }}
+        >
           <AiOutlinePlusCircle />
           <h1>Nova Entrada</h1>
         </NewButton>
-        <NewButton onClick={()=>{navigate("/outcome")}}>
+        <NewButton
+          onClick={() => {
+            navigate("/outcome");
+          }}
+        >
           <AiOutlineMinusCircle />
           <h1>Nova Saída</h1>
         </NewButton>
@@ -170,8 +187,7 @@ const DivItem = styled.div`
     font-weight: 400;
     line-height: 19px;
     letter-spacing: 0em;
-    color: #c70000;
-    color: #03ac00;
+    color: ${props => props.type === "income" ? "#03ac00" : "#c70000"}
   }
 `;
 const DivDateName = styled.div`
@@ -194,9 +210,9 @@ const BalanceDiv = styled.div`
     text-align: left;
     color: #000000;
   }
-  h2{
+  h2 {
     color: #03ac00;
-
+    color: ${props => props.balance<0 ? "#c70000" : "#03ac00"}
   }
 `;
 const ButtonContainer = styled.div`

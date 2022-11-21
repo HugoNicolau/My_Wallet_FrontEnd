@@ -1,15 +1,16 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { TokenContext } from "./TokenContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 export default function Income(){
 
     const [descriptionValue, setDescriptionValue] = useState("");
     const [value, setValue] = useState("");
     const { token } = useContext(TokenContext);
-
+    const date = dayjs().format("DD/MM");
     const navigate = useNavigate();
 
     function tryInsert(e){
@@ -18,7 +19,8 @@ export default function Income(){
         const body = {
             value,
             description:descriptionValue,
-            type:"income"
+            type:"income",
+            date
         }
 
         const config = {
@@ -40,6 +42,15 @@ export default function Income(){
             alert("Ocorreu um erro, tente novamente!");
         })
     }
+    
+
+      useEffect(() => {
+        if (token.length === 0) {
+            navigate("/sign-in");
+          }
+      
+      },[token, navigate]) 
+      
     return(
         <Container>
             <HeaderContainer>
