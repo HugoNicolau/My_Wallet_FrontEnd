@@ -24,7 +24,8 @@ const Container = styled.div`
     align-items:center;
     justify-content:center;
     flex-direction:column;
-
+    padding-left:25px;
+    padding-right:25px;
 `
 
 const Logo = styled.div`
@@ -42,9 +43,7 @@ border-radius: nullpx;
 
 const Field = styled.input`
 height: 58px;
-width: 326px;
-left: 25px;
-top: 233px;
+width:100%;
 border-radius: 5px;
 font-family: 'Raleway';
 font-size: 20px;
