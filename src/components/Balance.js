@@ -62,7 +62,7 @@ export default function Balance() {
                     <h2>{i.description}</h2>
                   </DivDateName>
                   <h3>
-                    {" "}
+                    R${" "}
                     {Number(i.value).toLocaleString("pt-BR", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
