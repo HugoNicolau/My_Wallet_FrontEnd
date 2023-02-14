@@ -206,7 +206,7 @@ const BalanceDiv = styled.div`
   position: absolute;
   bottom: 10px;
   display: flex;
-  width: 99%;
+  width: 96%;
   justify-content: space-between;
   h1 {
     font-family: Raleway;
