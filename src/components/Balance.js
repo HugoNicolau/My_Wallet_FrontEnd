@@ -61,13 +61,25 @@ export default function Balance() {
                     <h1>{i.date}</h1>
                     <h2>{i.description}</h2>
                   </DivDateName>
-                  <h3>{Number(i.value).toFixed(2)}</h3>
+                  <h3>
+                    {" "}
+                    {Number(i.value).toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </h3>
                 </DivItem>
               );
             })}
             <BalanceDiv balance={totalValue}>
               <h1>SALDO</h1>
-              <h2>{totalValue.toFixed(2)}</h2>
+              <h2>
+                R${" "}
+                {totalValue.toLocaleString("pt-BR", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </h2>
             </BalanceDiv>
           </DataAvailable>
         )}
@@ -194,7 +206,7 @@ const BalanceDiv = styled.div`
   position: absolute;
   bottom: 10px;
   display: flex;
-  width: 93%;
+  width: 99%;
   justify-content: space-between;
   h1 {
     font-family: Raleway;
@@ -221,6 +233,9 @@ const NewButton = styled.div`
   padding: 10px;
   border-radius: 5px;
   background-color: #a328d6;
+  :hover {
+    cursor: pointer;
+  }
 
   display: flex;
   flex-direction: column;

@@ -116,7 +116,7 @@ color: #000000;
 const StyledButton = styled.button`
 background-color: #A328D6;
 height: 46px;
-width: 326px;
+width: 100%;
 left: 23px;
 top: 375px;
 border-radius: 5px;
@@ -134,6 +134,9 @@ justify-content:center;
 box-shadow:none;
 border-style:solid;
 border-color:#A328D6;
+:hover{
+    cursor:pointer;
+}
 
 :active{
     background-color: #b44de0;
