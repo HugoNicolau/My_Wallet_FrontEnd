@@ -35,6 +35,10 @@ export default function Signin(){
         })
 
     }
+    function goToSignUp(){
+        
+        navigate("/sign-up")
+    }
 
     return(
         <Container>
@@ -44,7 +48,7 @@ export default function Signin(){
             <Field placeholder="Senha" type="password" id="passwordField" value={passwordValue} onChange={(e) => setPasswordValue(e.target.value)} required/>
             <StyledButton type="submit">Entrar</StyledButton>
             </form>
-            <StyledText>Primeira vez? Cadastre-se!</StyledText>
+            <StyledText onClick={() => goToSignUp()}>Primeira vez? Cadastre-se!</StyledText>
         </Container>
     )
 }

@@ -37,6 +37,10 @@ export default function Signup(){
         })
 
     }
+    function goToSignIn(){
+        
+        navigate("/sign-in")
+    }
 
     return(
         <Container>
@@ -49,7 +53,7 @@ export default function Signup(){
 
             <StyledButton type="submit">Cadastrar</StyledButton>
             </form>
-            <StyledText>Já tem uma conta? Entre agora!</StyledText>
+            <StyledText onClick={() => goToSignIn()}>Já tem uma conta? Entre agora!</StyledText>
         </Container>
     )
 }

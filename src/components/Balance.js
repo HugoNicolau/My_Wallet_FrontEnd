@@ -11,7 +11,7 @@ export default function Balance() {
   const { token } = useContext(TokenContext);
   const navigate = useNavigate();
   const [user, setUser] = useState("");
-  const [totalValue, setTotalValue] = useState(0)
+  const [totalValue, setTotalValue] = useState(0);
 
   useEffect(() => {
     const URL = "http://localhost:5000/balance";
@@ -23,59 +23,54 @@ export default function Balance() {
 
     const promise = axios.get(URL, config);
     promise.then((res) => {
-      console.log(res.data[0].name)
-      setItems(res.data);
-      setUser(res.data[0].name)
+      setItems(res.data.userBalance);
+      setUser(res.data.user.name);
       let cont = 0;
-    res.data.forEach((item) => {
-      item.type === "income" ? cont+= Number(item.value) : cont-=Number(item.value)
-
-    })
-    setTotalValue(cont)
+      res.data.userBalance.forEach((item) => {
+        item.type === "income"
+          ? (cont += Number(item.value))
+          : (cont -= Number(item.value));
+      });
+      setTotalValue(cont);
     });
 
     if (token.length === 0) {
       navigate("/sign-in");
     }
-
-    
-  }, [token,navigate]);
+  }, [token, navigate]);
 
   return (
     <Container>
       <HeaderContainer>
-
         <h1>Olá {user}</h1>
         <h1>
-          <RiLogoutBoxRLine onClick={() => window.location.reload()}/>
+          <RiLogoutBoxRLine onClick={() => window.location.reload()} />
         </h1>
       </HeaderContainer>
       <BoxContainer>
-        {items.length === 0 ? <NoData>
-                    <h1>
-                    Não há registros de
-entrada ou saída
-                    </h1>
-                </NoData> :
-               <DataAvailable>
-               {items.map((i, id) => {
-                 return (
-                   <DivItem key={id} type={i.type}>
-                     <DivDateName>
-                       <h1>{i.date}</h1>
-                       <h2>{i.description}</h2>
-                     </DivDateName>
-                     <h3>{Number(i.value).toFixed(2)}</h3>
-                   </DivItem>
-                 );
-               })}
-               <BalanceDiv balance={totalValue}>
-                 <h1>SALDO</h1>
-                 <h2>{totalValue.toFixed(2)}</h2>
-               </BalanceDiv>
-             </DataAvailable> }
-        
-        
+        {items.length === 0 ? (
+          <NoData>
+            <h1>Não há registros de entrada ou saída</h1>
+          </NoData>
+        ) : (
+          <DataAvailable>
+            {items.map((i, id) => {
+              return (
+                <DivItem key={id} type={i.type}>
+                  <DivDateName>
+                    <h1>{i.date}</h1>
+                    <h2>{i.description}</h2>
+                  </DivDateName>
+                  <h3>{Number(i.value).toFixed(2)}</h3>
+                </DivItem>
+              );
+            })}
+            <BalanceDiv balance={totalValue}>
+              <h1>SALDO</h1>
+              <h2>{totalValue.toFixed(2)}</h2>
+            </BalanceDiv>
+          </DataAvailable>
+        )}
       </BoxContainer>
       <ButtonContainer>
         <NewButton
@@ -187,7 +182,7 @@ const DivItem = styled.div`
     font-weight: 400;
     line-height: 19px;
     letter-spacing: 0em;
-    color: ${props => props.type === "income" ? "#03ac00" : "#c70000"}
+    color: ${(props) => (props.type === "income" ? "#03ac00" : "#c70000")};
   }
 `;
 const DivDateName = styled.div`
@@ -212,7 +207,7 @@ const BalanceDiv = styled.div`
   }
   h2 {
     color: #03ac00;
-    color: ${props => props.balance<0 ? "#c70000" : "#03ac00"}
+    color: ${(props) => (props.balance < 0 ? "#c70000" : "#03ac00")};
   }
 `;
 const ButtonContainer = styled.div`
