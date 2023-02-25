@@ -29,7 +29,7 @@ export default function Income(){
             },
           };
 
-        const URL = "http://localhost:5000/balance";
+        const URL = "https://mywallet-api-gasr.onrender.com/balance";
 
         const promise = axios.post(URL, body, config)
         promise.then((res) => {

@@ -25,7 +25,7 @@ export default function Signup(){
             password: passwordValue,
         }
 
-        const URL = "http://localhost:5000/sign-up";
+        const URL = "https://mywallet-api-gasr.onrender.com/sign-up";
 
         const promise = axios.post(URL, body)
         promise.then((res) => {

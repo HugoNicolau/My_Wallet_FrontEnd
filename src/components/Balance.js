@@ -14,7 +14,7 @@ export default function Balance() {
   const [totalValue, setTotalValue] = useState(0);
 
   useEffect(() => {
-    const URL = "http://localhost:5000/balance";
+    const URL = "https://mywallet-api-gasr.onrender.com/balance";
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
